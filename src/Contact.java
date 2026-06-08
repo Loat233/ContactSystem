@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * 节点类：表示通讯录中的每一个联系人
  */
-class Contact {
+class Contact implements Serializable {
     String name;
     String phone;
     String address;

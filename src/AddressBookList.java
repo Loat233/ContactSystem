@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.function.Supplier;
 
 /**
  * 链表管理类：实现通讯录的各项功能
  */
-public class AddressBookList {
+public class AddressBookList implements Serializable {
     // 使用虚拟头节点，可以极大地方便插入和删除操作，不需要单独处理头节点为空的情况
     private Contact head;
 
@@ -13,7 +14,7 @@ public class AddressBookList {
     }
 
     // (2) 实现联系人添加，并按姓名排序插入到正确位置
-    public void addContact(String name, String phone, String address, String email) {
+    public boolean addContact(String name, String phone, String address, String email) {
         Contact newContact = new Contact(name, phone, address, email);
         Contact current = head;
 
@@ -27,21 +28,25 @@ public class AddressBookList {
         newContact.next = current.next;
         current.next = newContact;
         System.out.println("成功添加联系人并排序: " + name);
+        return true;
+    }
+
+    public boolean addContact(Supplier<String> nameSp, Supplier<String> phoneSp, Supplier<String> addrSp, Supplier<String> emailSp) {
+        return addContact(nameSp.get(), phoneSp.get(), addrSp.get(), emailSp.get());
     }
 
     // (3) 实现删除联系人功能 (按姓名删除)
-    public void deleteContact(String name) {
+    public boolean deleteContact(String name) {
         Contact current = head;
 
         while (current.next != null) {
             if (current.next.name.equals(name)) {
-                current.next = current.next.next; // 跳过要删除的节点
-                System.out.println("成功删除联系人: " + name);
-                return;
+                current.next = current.next.next;
+                return true;
             }
             current = current.next;
         }
-        System.out.println("未找到联系人: " + name + "，删除失败。");
+        return false;
     }
 
     // (4) 实现按姓名快速查找
@@ -54,7 +59,7 @@ public class AddressBookList {
             }
             current = current.next;
         }
-        System.out.println("未查找到姓名为 " + name + " 的联系人。");
+        System.out.println("未查找到姓名为 " + name + " 的联系人");
     }
 
     // (4) 实现按手机号码快速查找
@@ -67,7 +72,7 @@ public class AddressBookList {
             }
             current = current.next;
         }
-        System.out.println("未查找到手机号为 " + phone + " 的联系人。");
+        System.out.println("未查找到手机号为 " + phone + " 的联系人");
     }
 
     // (5) 修改联系人的基本信息
@@ -83,16 +88,18 @@ public class AddressBookList {
             }
             current = current.next;
         }
-        System.out.println("未找到联系人: " + name + "，修改失败。");
+        System.out.println("未找到联系人: " + name + ",修改失败");
     }
 
-    public void  modifyContact(Supplier<> )
+    public void modifyContact(Supplier<String> nameSp, Supplier<String> phoneSp, Supplier<String> addrSp, Supplier<String> emailSp) {
+        modifyContact(nameSp.get(), phoneSp.get(), addrSp.get(), emailSp.get());
+    }
 
     // 辅助方法：打印通讯录中所有联系人，方便测试观察排序效果
-    public void displayAll() {
+    public void printAll() {
         Contact current = head.next;
         if (current == null) {
-            System.out.println("通讯录为空。");
+            System.out.println("通讯录为空");
             return;
         }
         System.out.println("--- 当前通讯录列表 ---");
